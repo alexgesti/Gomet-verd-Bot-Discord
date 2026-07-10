@@ -1,5 +1,6 @@
 const supabase = require("./supabase");
 
+
 async function saveGuildSettings({
     guildId,
     channelId,
@@ -18,11 +19,14 @@ async function saveGuildSettings({
             last_processed_message_id: null
         });
 
+
     if (error) {
         throw error;
     }
 
 }
+
+
 
 async function getGuildSettings(guildId) {
 
@@ -32,13 +36,17 @@ async function getGuildSettings(guildId) {
         .eq("guild_id", guildId)
         .single();
 
+
     if (error) {
         return null;
     }
 
+
     return data;
 
 }
+
+
 
 async function setInitialized(guildId, lastMessageId) {
 
@@ -50,14 +58,36 @@ async function setInitialized(guildId, lastMessageId) {
         })
         .eq("guild_id", guildId);
 
+
     if (error) {
         throw error;
     }
 
 }
 
+
+
+async function updateLastMessage(guildId, lastMessageId) {
+
+    const { error } = await supabase
+        .from("guild_settings")
+        .update({
+            last_processed_message_id: lastMessageId
+        })
+        .eq("guild_id", guildId);
+
+
+    if (error) {
+        throw error;
+    }
+
+}
+
+
+
 module.exports = {
     saveGuildSettings,
     getGuildSettings,
-    setInitialized
+    setInitialized,
+    updateLastMessage
 };
